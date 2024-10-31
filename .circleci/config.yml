@@ -1,23 +1,26 @@
-version: 2
+# This config was automatically generated from your source code
+# Stacks detected: deps:go:.
+version: 2.1
+
+parameters:
+  greeting:
+    type: string
+    default: "Bob"
 
 jobs:
-  build:
+  test-go:
+    # Install go modules and run tests
     docker:
-      - image: cimg/ruby:3.3.4
-    parallelism: 2
+      - image: cimg/go:1.21.1
     steps:
       - checkout
-      - run: gem install bundler:2.5.17
-      - run: bundle install
       - run:
-          name: the tests
-          command: |
-            TESTFILES=$(cat testname-list.txt | circleci tests split --split-by=timings --timings-type=testname)
-            #  TESTFILES=$(find spec -name '*_spec.rb' | circleci tests split --split-by=timings --timings-type=filename)
-             bundle exec rspec --format progress --format RspecJunitFormatter -o ~/rspec/rspec.xml $TESTFILES
-             
-   #         circleci tests glob "./spec/**/*_spec.rb" | circleci tests run --command="xargs bundle exec rspec --format progress --format RspecJunitFormatter -o ~/rspec/rspec.xml" --verbose --split-by=timings 
-      - store_test_results:
-          path: ~/rspec 
-      - store_artifacts: 
-          path: ~/rspec 
+          name: Say Hello
+          command: echo Hello << pipeline.parameters.greeting >>
+workflows:
+  build-and-test:
+    jobs:
+      - test-go
+    # - deploy:
+    #     requires:
+    #       - test-go
