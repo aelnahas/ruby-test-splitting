@@ -20,7 +20,11 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-go
+      - test-go:
+          filters: 
+            tags:
+              only: 
+                - /^v.*/
     # - deploy:
     #     requires:
     #       - test-go
