@@ -17,6 +17,7 @@ jobs:
       - run:
           name: Say Hello
           command: echo Hello << pipeline.parameters.greeting >>
+      - run: sleep 60
 workflows:
   build-and-test:
     jobs:
